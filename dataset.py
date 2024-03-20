@@ -1,5 +1,4 @@
-import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import Dataset
 from config import *
 
 
@@ -14,7 +13,7 @@ class FeedbackPrizeDataset(Dataset):
         self.config = config
 
     def __getitem__(self, index):
-        text = self.data[index]
+        text = self.data.text[index]
         encoded_text = self.tokenizer(text.split(), is_split_into_words=True, truncation=True, padding=True,
                                       return_tensors="pt", max_length=self.max_len)
         word_ids = encoded_text.word_ids()
