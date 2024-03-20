@@ -37,6 +37,7 @@ class Config:
         self.num_labels = 15
         self.label_subtokens = True
         self.hidden_dropout_prob = 0.1
+        self.verbose_steps = 100
 
         if torch.cuda.is_available():
             self.device = torch.device('cuda')

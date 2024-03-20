@@ -7,6 +7,7 @@ import pandas as pd
 import torch.nn as nn
 import gc
 
+
 def active_logits(raw_logits: torch.Tensor, word_ids: torch.Tensor, config: Config):
     word_ids = word_ids.view(-1)
     active_mask = word_ids.unsqueeze(1).expand(word_ids.shape[0], config.num_labels)
@@ -242,7 +243,7 @@ def train_fn(model, dl_train, optimizer, epoch, criterion, config: Config):
         scaler.update()
         train_loss += loss.item()
 
-        if batch_idx % Config.verbose_steps == 0:
+        if batch_idx % config.verbose_steps == 0:
             loss_step = train_loss / batch_idx
             print(f'Training loss after {batch_idx:04d} training steps: {loss_step}')
 
@@ -255,8 +256,8 @@ def train_fn(model, dl_train, optimizer, epoch, criterion, config: Config):
     print(f'epoch {epoch} - training accuracy: {epoch_accuracy:.4f}')
 
 
-def valid_fn(model, df_val, df_val_eval, dl_val, epoch, criterion):
-    oof, valid_loss, valid_acc = get_preds_onefold(model, df_val, dl_val, criterion, valid_flg=True)
+def valid_fn(model, df_val, df_val_eval, dl_val, epoch, criterion, config: Config):
+    oof, valid_loss, valid_acc = get_preds_onefold(model, df_val, dl_val, criterion, valid_flg=True, config=config)
     f1score = []
     # classes = oof['class'].unique()
     classes = ['Lead', 'Position', 'Claim', 'Counterclaim', 'Rebuttal', 'Evidence', 'Concluding Statement']
