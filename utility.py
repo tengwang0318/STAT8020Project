@@ -173,7 +173,7 @@ def get_preds_onefold(model, df, dl, criterion, valid_flg, config):
 
 def get_preds_folds(model, df, dl, criterion, valid_flg=False, config: Config = None):
     for i_fold in range(config.n_fold):
-        model_filename = os.path.join(config.model_dir, f"{config.model_name}_{i_fold}.bin")
+        model_filename = os.path.join(config.model_dir, f"{config.model_save_path}_{i_fold}.bin")
         print(f"{model_filename} inference")
         model = model.to(config.device)
         model.load_state_dict(torch.load(model_filename))

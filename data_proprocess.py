@@ -49,10 +49,11 @@ def split_fold(df_train, config):
 
 
 def preprocess(config):
-    df_train = get_df_train(config)
+    # df_train = get_df_train(config)
     df_texts = agg_essays(config)
 
-    if config.is_training:
+    if config.is_training=="train":
+        df_train = get_df_train(config)
         df_texts = ner(df_texts, df_train)
         df_texts = split_fold(df_texts, config)
     return df_texts

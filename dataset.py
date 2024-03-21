@@ -14,9 +14,24 @@ class FeedbackPrizeDataset(Dataset):
 
     def __getitem__(self, index):
         text = self.data.text[index]
-        encoded_text = self.tokenizer(text.split(), is_split_into_words=True, truncation=True, padding=True,
-                                      return_tensors="pt", max_length=self.max_len)
+        encoded_text = self.tokenizer(text.split(),
+                                      is_split_into_words=True,
+                                      truncation=True,
+                                      max_length=self.max_len,
+                                      padding="max_length",
+                                      return_tensors="pt",
+                                      )
         word_ids = encoded_text.word_ids()
+
+        encoded_text = {k: v.squeeze(0) for k, v in encoded_text.items()}
+
+        # encoded_text = self.tokenizer(text,
+        #                               truncation=True,
+        #                               max_length=self.max_len,
+        #                               padding=True,
+        #                               return_tensors="pt",
+        #                               )
+        # print(encoded_text['input_ids'].shape)
 
         if self.has_labels:
             word_labels = self.data.entities[index]
@@ -34,9 +49,10 @@ class FeedbackPrizeDataset(Dataset):
                         labels_ids.append(IGNORE_INDEX)
 
                 prev_word_idx = word_idx
-            encoded_text['label'] = labels_ids
+            encoded_text['labels'] = labels_ids
 
         item = {k: torch.as_tensor(v) for k, v in encoded_text.items()}
+        # if index == 6: print(item)
         word_ids2 = [w if w is not None else NON_LABEL for w in word_ids]
         item['word_ids'] = torch.as_tensor(word_ids2)
         return item

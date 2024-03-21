@@ -12,6 +12,7 @@ class Config:
             self.model_name = "FacebookAI/roberta-base"
         elif model_name == "roberta-large":
             self.model_name = "FacebookAI/roberta-large"
+        self.model_save_path = model_name
         self.base_dir = os.getcwd()
         self.data_dir = os.path.join(self.base_dir, "feedback-prize-2021")
         self.output_dir = os.path.join(self.base_dir, "outputs")

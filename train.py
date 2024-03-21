@@ -18,8 +18,8 @@ parser.add_argument("--is_training", type=bool, default=True)
 parser.add_argument("--model_name", type=str, default="longformer")
 parser.add_argument("--epochs", type=int, default=2)
 parser.add_argument("--n_folds", type=int, default=5)
-parser.add_argument("--train_batch_size", type=int, default=4)
-parser.add_argument("--valid_batch_size", type=int, default=4)
+parser.add_argument("--train_batch_size", type=int, default=2)
+parser.add_argument("--valid_batch_size", type=int, default=2)
 
 args = parser.parse_args()
 config = Config(args)
@@ -66,8 +66,8 @@ for i_fold in range(config.n_fold):
         if valid_loss < best_val_loss:
             best_val_loss = valid_loss
             _oof_fold_best = _oof
-            _oof_fold_best['fold'] = i_fold
-            model_filename = f'{config.model_dir}/{config.model_name}_{i_fold}.bin'
+            _oof_fold_best['fold'] = i_fold 
+            model_filename = f'{config.model_dir}/{config.model_save_path}_{i_fold}.bin'
             torch.save(model.state_dict(), model_filename)
             print(f'{model_filename} saved')
 
@@ -104,5 +104,5 @@ for i_fold in range(config.n_fold):
 #             print(f'{model_filename} saved')
 #
 #     oof = pd.concat([oof, _oof_fold_best])
-oof.to_csv(f"{config.output_dir}/oof_{config.model_name}", index=False)
+oof.to_csv(f"{config.output_dir}/oof_{config.model_save_path}", index=False)
 print(f"overall cv score: {oof_score(all_train_df, oof)}")
